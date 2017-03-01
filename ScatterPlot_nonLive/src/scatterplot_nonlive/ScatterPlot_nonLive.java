@@ -25,19 +25,17 @@ import javafx.stage.Stage;
  * @author dell pc
  */
 public class ScatterPlot_nonLive extends Application {
+
     static int numOfClusters;
     static FileReader fr;
     static BufferedReader br;
-    XYChart.Series series1 = new XYChart.Series();
-    XYChart.Series series2 = new XYChart.Series();
-    XYChart.Series series3 = new XYChart.Series();
     NumberAxis xAxis, yAxis;
     ScatterChart<Number, Number> lineChart;
     String input;
-
+    
     @Override
     public void start(Stage stage) throws Exception {
-
+        
         fr = new FileReader("input.txt");
         br = new BufferedReader(fr);
         
@@ -49,36 +47,24 @@ public class ScatterPlot_nonLive extends Application {
         yAxis.setLabel("");
         lineChart.setAnimated(false);
         lineChart.setTitle("");
+        lineChart.setLegendVisible(true);
         lineChart.setHorizontalGridLinesVisible(true);
         if (fr == null) {
             System.err.println("The Log file of the clustering process not found");
             System.exit(1);
         }
-        numOfClusters=Integer.parseInt(br.readLine());
-        ScatterChart.Series<Number,Number>[] array=new ScatterChart.Series[numOfClusters];
-        System.out.println("NumofCluster="+numOfClusters);
-        for(int i=0;i<numOfClusters;i++){
-        array[i]=new ScatterChart.Series<Number, Number>();
+        numOfClusters = Integer.parseInt(br.readLine());
+        ScatterChart.Series<Number, Number>[] array = new ScatterChart.Series[numOfClusters];
+        System.out.println("NumofCluster=" + numOfClusters);
+        for (int i = 0; i < numOfClusters; i++) {
+            array[i] = new ScatterChart.Series<Number, Number>();
         }
-/*        final ScatterChart.Series<Number, Number> series = new ScatterChart.Series<Number, Number>();
-        final ScatterChart.Series<Number, Number> seriesb = new ScatterChart.Series<Number, Number>();
-        final ScatterChart.Series<Number, Number> seriesc = new ScatterChart.Series<Number, Number>();
-*/
+
         input = " ";
-        
         while ((input = br.readLine()) != null) {
-             {
-                System.out.println(input);
-                if (input.endsWith("" + 1)) {
-                    array[0].getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
-                } else if (input.endsWith("" + 2)) {
-                    array[1].getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
-                } else if (input.endsWith("" + 3)) {
-                    array[2].getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
-
-                } else {
-
-                }
+            {
+                System.out.println(input.charAt(input.length()-1));
+                array[Integer.parseInt(""+input.charAt(input.length()-1))-1].getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
             }
         }
 //        series.setName("Cluster A");
@@ -88,15 +74,18 @@ public class ScatterPlot_nonLive extends Application {
         if (lineChart.getData() == null) {
             lineChart.setData(FXCollections.<XYChart.Series<Number, Number>>observableArrayList());
         }
-        lineChart.getData().add(array[0]);
-        lineChart.getData().add(array[1]);
-        lineChart.getData().add(array[2]);
-//        lineChart.getData().removeAll(series, seriesb, seriesc);
+        for(int i=0;i<numOfClusters;i++){
+            array[i].setName("Cluster "+(i+1));
+            //System.out.println("Adding "+(i+1));
+            if(array[i].getData().size()>0){
+            lineChart.getData().add(array[i]);
+            }
+        }
         Scene scene = new Scene(lineChart, 500, 400);
-        //       scene.getStylesheets().add(getClass().getResource("Chart.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("Chart.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
-
+        
     }
 
     /**
@@ -106,5 +95,5 @@ public class ScatterPlot_nonLive extends Application {
         
         launch(args);
     }
-
+    
 }
