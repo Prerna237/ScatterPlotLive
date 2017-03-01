@@ -25,7 +25,7 @@ import javafx.stage.Stage;
  * @author dell pc
  */
 public class ScatterPlot_nonLive extends Application {
-
+    static int numOfClusters;
     static FileReader fr;
     static BufferedReader br;
     XYChart.Series series1 = new XYChart.Series();
@@ -40,7 +40,7 @@ public class ScatterPlot_nonLive extends Application {
 
         fr = new FileReader("input.txt");
         br = new BufferedReader(fr);
-
+        
         stage.setTitle("Clustering Result");
         xAxis = new NumberAxis(0, 10, 1);
         yAxis = new NumberAxis(0, 10, 1);
@@ -54,36 +54,43 @@ public class ScatterPlot_nonLive extends Application {
             System.err.println("The Log file of the clustering process not found");
             System.exit(1);
         }
-
-        final ScatterChart.Series<Number, Number> series = new ScatterChart.Series<Number, Number>();
+        numOfClusters=Integer.parseInt(br.readLine());
+        ScatterChart.Series<Number,Number>[] array=new ScatterChart.Series[numOfClusters];
+        System.out.println("NumofCluster="+numOfClusters);
+        for(int i=0;i<numOfClusters;i++){
+        array[i]=new ScatterChart.Series<Number, Number>();
+        }
+/*        final ScatterChart.Series<Number, Number> series = new ScatterChart.Series<Number, Number>();
         final ScatterChart.Series<Number, Number> seriesb = new ScatterChart.Series<Number, Number>();
         final ScatterChart.Series<Number, Number> seriesc = new ScatterChart.Series<Number, Number>();
+*/
         input = " ";
+        
         while ((input = br.readLine()) != null) {
              {
                 System.out.println(input);
                 if (input.endsWith("" + 1)) {
-                    series.getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
+                    array[0].getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
                 } else if (input.endsWith("" + 2)) {
-                    seriesb.getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
+                    array[1].getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
                 } else if (input.endsWith("" + 3)) {
-                    seriesc.getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
+                    array[2].getData().add(new ScatterChart.Data<Number, Number>(Integer.parseInt("" + input.charAt(0)), Integer.parseInt("" + input.charAt(2))));
 
                 } else {
 
                 }
             }
         }
-        series.setName("Cluster A");
-        seriesb.setName("Cluster B");
-        seriesc.setName("Cluster C");
+//        series.setName("Cluster A");
+//        seriesb.setName("Cluster B");
+//        seriesc.setName("Cluster C");
 
         if (lineChart.getData() == null) {
             lineChart.setData(FXCollections.<XYChart.Series<Number, Number>>observableArrayList());
         }
-        lineChart.getData().add(seriesb);
-        lineChart.getData().add(series);
-        lineChart.getData().add(seriesc);
+        lineChart.getData().add(array[0]);
+        lineChart.getData().add(array[1]);
+        lineChart.getData().add(array[2]);
 //        lineChart.getData().removeAll(series, seriesb, seriesc);
         Scene scene = new Scene(lineChart, 500, 400);
         //       scene.getStylesheets().add(getClass().getResource("Chart.css").toExternalForm());
@@ -96,6 +103,7 @@ public class ScatterPlot_nonLive extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
         launch(args);
     }
 
